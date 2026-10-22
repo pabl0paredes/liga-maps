@@ -13,7 +13,7 @@
 :root{
   --bg:#eef3f4; --surface:#ffffff; --ink:#13283a; --muted:#5b6f7d; --line:#d3dee3;
   --accent:#e2591b; --accent-ink:#ffffff;
-  --globle:#14907e; --flagle:#c8333f; --maptap:#c48a0e;
+  --globle:#14907e; --flagle:#c8333f; --maptap:#c48a0e; --dguess:#5d6bb0;
   --gold:#d4a017; --silver:#9aa7b0; --bronze:#b5703a;
   --soft:#f6f9fa; --warn:#a1471a;
   --f-display:"Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
@@ -23,13 +23,13 @@
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0d1820; --surface:#14232e; --ink:#e3ecf0; --muted:#8fa3b0; --line:#25394a;
   --accent:#ff7a3d; --accent-ink:#1a0d05;
-  --globle:#3cc4ae; --flagle:#ff6b75; --maptap:#f0b93a;
+  --globle:#3cc4ae; --flagle:#ff6b75; --maptap:#f0b93a; --dguess:#9aa6e6;
   --gold:#f0c43a; --silver:#b7c3cb; --bronze:#d8925a;
   --soft:#182a37; --warn:#ff9a66; color-scheme:dark;}}
 :root[data-theme="dark"]{
   --bg:#0d1820; --surface:#14232e; --ink:#e3ecf0; --muted:#8fa3b0; --line:#25394a;
   --accent:#ff7a3d; --accent-ink:#1a0d05;
-  --globle:#3cc4ae; --flagle:#ff6b75; --maptap:#f0b93a;
+  --globle:#3cc4ae; --flagle:#ff6b75; --maptap:#f0b93a; --dguess:#9aa6e6;
   --gold:#f0c43a; --silver:#b7c3cb; --bronze:#d8925a;
   --soft:#182a37; --warn:#ff9a66; color-scheme:dark;}
 *{box-sizing:border-box}
@@ -130,6 +130,17 @@ tr.me td{background:var(--soft)}
 .fday input{padding:6px 8px;font-size:13px;background:var(--surface)}
 .fday .edit{font-size:12px;color:var(--muted);background:none;border:0;padding:0;text-align:left;cursor:pointer;text-decoration:underline}
 .seedbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+.games{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:860px){.games{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:420px){.games{gap:8px}.game{padding:10px 12px}.game .gt{font-size:15px}.game .gt .go{font-size:15px}.game .gw{display:none}.game .gd{font-size:12px}}
+.game{display:flex;flex-direction:column;gap:6px;padding:12px 14px;border-radius:10px;background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--c);color:var(--ink);text-decoration:none;min-width:0;transition:transform .12s ease,border-color .12s ease}
+.game:hover{transform:translateY(-2px);border-color:var(--c)}
+.game:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.game .gt{display:flex;align-items:center;gap:8px;font-family:var(--f-display);font-weight:600;font-size:17px}
+.game .gt .go{margin-left:auto;white-space:nowrap;font:600 13px var(--f-body);color:var(--c)}
+.game .gd{font-size:13px;color:var(--muted);line-height:1.4}
+.game .gtag{margin-top:auto;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--c)}
+.game.off .gtag{color:var(--muted)}
 .rules{font-size:13px;color:var(--muted);margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -157,6 +168,27 @@ tr.me td{background:var(--soft)}
 
   <!-- CARGAR -->
   <section class="panel" id="p-cargar">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <h3>Juegos de hoy</h3>
+      <div class="games">
+        <a class="game" style="--c:var(--maptap)" href="https://maptap.gg" target="_blank" rel="noopener">
+          <span class="gt">MapTap<span class="go"><span class="gw">Jugar </span>↗</span></span>
+          <span class="gd">Ubica 5 lugares en el mapamundi.</span>
+          <span class="gtag">Suma puntos</span></a>
+        <a class="game" style="--c:var(--globle)" href="https://globle-game.com" target="_blank" rel="noopener">
+          <span class="gt">Globle<span class="go"><span class="gw">Jugar </span>↗</span></span>
+          <span class="gd">Encuentra el país del día.</span>
+          <span class="gtag">Suma puntos</span></a>
+        <a class="game off" style="--c:var(--dguess)" href="https://dailyguessr.app/" target="_blank" rel="noopener">
+          <span class="gt">DailyGuessr<span class="go"><span class="gw">Jugar </span>↗</span></span>
+          <span class="gd">Adivina dónde se sacó la foto.</span>
+          <span class="gtag">No suma puntos</span></a>
+        <a class="game" style="--c:var(--flagle)" href="https://www.flagle.io/" target="_blank" rel="noopener">
+          <span class="gt">Flagle<span class="go"><span class="gw">Jugar </span>↗</span></span>
+          <span class="gd">Adivina la bandera; cada error destapa un cuadro.</span>
+          <span class="gtag">Suma puntos</span></a>
+      </div>
+    </div>
     <div class="grid2">
       <div class="box">
         <h2>Pega tu resultado</h2>
