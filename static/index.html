@@ -293,7 +293,7 @@ function parseBlock(text){
   const t=todayStr();
   if(/🌎/u.test(text)||/globle/i.test(text)){
     const m=text.match(/=\s*(\d{1,3})/);const d=text.match(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+(\d{1,2}),\s*(\d{4})/i);
-    if(!m)return{error:"Globle sin puntaje (falta \"= N\")"};
+    if(!m)return{game:"globle",error:"Globle sin puntaje (falta \"= N\")"};
     let date=t;if(d){const mo=MONTHS[d[1].slice(0,3).toLowerCase()];if(validDate(+d[3],mo,+d[2]))date=ymd(+d[3],mo,+d[2]);}
     const sq=text.split("\n").find(l=>/=\s*\d/.test(l));
     const detail=sq?sq.split("=")[0].replace(/\s+/g,"").slice(0,120):"";
@@ -311,7 +311,7 @@ function parseBlock(text){
   if(/maptap/i.test(text)){
     const m=text.match(/final\s*score:?\s*(\d+)/i);
     const d=text.match(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+(\d{1,2})\b/i);
-    if(!m)return{error:"MapTap sin \"Final score\""};
+    if(!m)return{game:"maptap",error:"MapTap sin \"Final score\""};
     let date=t;
     if(d){const mo=MONTHS[d[1].slice(0,3).toLowerCase()];let y=+t.slice(0,4);
       if(validDate(y,mo,+d[2])){let c=ymd(y,mo,+d[2]);if(c>addDays(t,1))c=ymd(y-1,mo,+d[2]);date=c;}}
@@ -327,7 +327,9 @@ function parseAll(text){
     const body=b.lines.join("\n");const r=parseBlock(body);
     if(r)out.push({...r,sender:b.sender});
   }
-  return out;
+  // Hide a game's warning when the same paste also has a valid result for that game (e.g. a title line split off).
+  const ok=new Set(out.filter(x=>!x.error).map(x=>x.game+"|"+(x.sender||"")));
+  return out.filter(x=>!x.error||!ok.has(x.game+"|"+(x.sender||"")));
 }
 
 // ---------- names ----------
