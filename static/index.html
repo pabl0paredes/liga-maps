@@ -271,13 +271,16 @@ function validDate(y,m,d){const t=new Date(Date.UTC(y,m-1,d));return t.getUTCMon
 
 // ---------- parsing ----------
 const WA=/^‎?\[?(\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4}),?\s+(\d{1,2}:\d{2})(?::\d{2})?(?:\s?[ap]\.?\s?m\.?)?\]?\s?(?:-\s)?([^:\n]{1,40}):\s?(.*)$/i;
-const START=[/🌎.*\d{4}/u,/#flagle\b/i,/maptap\.gg.*\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s+\d{1,2}/i];
+const START=[/^\s*globle\s+stats\b/i,/🌎.*\d{4}/u,/#flagle\b/i,/maptap\.gg.*\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s+\d{1,2}/i];
+// A block that so far holds only titles/separators (no digits, e.g. "Globle Stats") belongs to the result that follows it.
+const onlyHeader=b=>!b.lines.some(l=>/\d/.test(l));
 function splitBlocks(text){
   const blocks=[];let cur=null;let sender=null;
   for(let raw of text.split(/\r?\n/)){
     let line=raw;const w=line.match(WA);
     if(w){sender=w[3].replace(/^~\s?/,"").trim();line=w[4];}
-    if(START.some(r=>r.test(line))||!cur||(w&&cur.sender!==sender)){
+    const sameSender=!w||cur?.sender===sender;
+    if(!cur||!sameSender||(START.some(r=>r.test(line))&&!onlyHeader(cur))){
       if(cur&&cur.lines.join("").trim())blocks.push(cur);
       cur={sender,lines:[]};
     }
